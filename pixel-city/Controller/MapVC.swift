@@ -52,6 +52,8 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         
         pullUpView.addSubview(collectionView!)
         
+        registerForPreviewing(with: self, sourceView: collectionView!)
+        
         // accurate location
 //        locationManager.desiredAccuracy = kCLLocationAccuracyBest
 //        self.mapView.showsUserLocation = true
@@ -90,7 +92,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     // Using the autoLayout to do it again
     func addProgressLbl() {
         progressLbl = UILabel()
-        progressLbl?.frame = CGRect(x: (screenSize.width / 2) - 120, y: 175, width: 300, height: 40)
+        progressLbl?.frame = CGRect(x: (screenSize.width / 2) - 150, y: 175, width: 300, height: 40)
         progressLbl?.font = UIFont(name: "Avenir Next", size: 18)
         progressLbl?.textColor = UIColor.darkGray
         progressLbl?.textAlignment = .center
@@ -155,7 +157,13 @@ extension MapVC: MKMapViewDelegate {
         //
         removePin()
         removeSpinner()
+        removeProgressLbl()
         cancelAllSessions()
+        
+        imageArray = []
+        imageUrlArray = []
+        collectionView?.reloadData()
+        
         //
         animateViewUp()
         addSwipe()
@@ -179,6 +187,7 @@ extension MapVC: MKMapViewDelegate {
                     if success {
                         self.removeSpinner()
                         self.removeProgressLbl()
+                        self.collectionView?.reloadData()
                     }
                 })
             }
@@ -234,8 +243,8 @@ extension MapVC: MKMapViewDelegate {
     
     func cancelAllSessions() {
         Alamofire.SessionManager.default.session.getTasksWithCompletionHandler { (sessionDataTask, uploadData, downloadData) in
-            sessionDataTask.forEach({($0).cancel()})
-            downloadData.forEach({($0).cancel()})
+            sessionDataTask.forEach({$0.cancel()})
+            downloadData.forEach({$0.cancel()})
         }
     }
     
@@ -258,16 +267,47 @@ extension MapVC: CLLocationManagerDelegate {
 
 extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return imageArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell else {return UICollectionViewCell()}
+        let imageFromIndex = imageArray[indexPath.row]
+        let imageView = UIImageView(image: imageFromIndex)
+        cell.addSubview(imageView)
         return cell
+        
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let popVC = storyboard?.instantiateViewController(withIdentifier: "PopVC") as? PopVC else {return}
+        popVC.initData(forImage: imageArray[indexPath.row])
+        present(popVC, animated: true, completion: nil)
+    }
+    
 }
+
+
+extension MapVC: UIViewControllerPreviewingDelegate {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = collectionView?.indexPathForItem(at: location), let cell = collectionView?.cellForItem(at: indexPath) else {return nil}
+        
+        guard let popVC = storyboard?.instantiateViewController(withIdentifier: "PopVC") as? PopVC else {return nil}
+        popVC.initData(forImage: imageArray[indexPath.row])
+        
+        previewingContext.sourceRect = cell.contentView.frame
+        
+        return popVC
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        show(viewControllerToCommit, sender: self)
+    }
+    
+}
+
+

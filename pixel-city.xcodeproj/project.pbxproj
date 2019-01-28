@@ -17,6 +17,7 @@
 		AA86AEB321FEB7C900414F20 /* DroppablePin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA86AEB221FEB7C900414F20 /* DroppablePin.swift */; };
 		AAD9012021FEE10400749D9F /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD9011F21FEE10400749D9F /* PhotoCell.swift */; };
 		AAD9012221FEEABE00749D9F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD9012121FEEABE00749D9F /* Constants.swift */; };
+		AAD9012421FF056900749D9F /* PopVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD9012321FF056900749D9F /* PopVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		AA86AEB221FEB7C900414F20 /* DroppablePin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DroppablePin.swift; sourceTree = "<group>"; };
 		AAD9011F21FEE10400749D9F /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		AAD9012121FEEABE00749D9F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		AAD9012321FF056900749D9F /* PopVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopVC.swift; sourceTree = "<group>"; };
 		EED549C2DC227664C91986BA /* Pods-pixel-city.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pixel-city.debug.xcconfig"; path = "Pods/Target Support Files/Pods-pixel-city/Pods-pixel-city.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				AA86AE9B21FE95BC00414F20 /* MapVC.swift */,
+				AAD9012321FF056900749D9F /* PopVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 			files = (
 				AA86AE9C21FE95BC00414F20 /* MapVC.swift in Sources */,
 				AAD9012021FEE10400749D9F /* PhotoCell.swift in Sources */,
+				AAD9012421FF056900749D9F /* PopVC.swift in Sources */,
 				AA86AEB321FEB7C900414F20 /* DroppablePin.swift in Sources */,
 				AA86AE9A21FE95BC00414F20 /* AppDelegate.swift in Sources */,
 				AA86AEA221FE95BC00414F20 /* pixel_city.xcdatamodeld in Sources */,
