@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7C3ED3C79E8974B724655BC0 /* libPods-pixel-city.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C56E000E9EC99132062C110 /* libPods-pixel-city.a */; };
+		AA3E376A221FC9A8007A25AC /* FlickrImg.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3E3769221FC9A8007A25AC /* FlickrImg.swift */; };
+		AA3E376E222020A3007A25AC /* ImgDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3E376C222020A3007A25AC /* ImgDetailVC.swift */; };
+		AA3E376F222020A3007A25AC /* ImgDetailVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA3E376D222020A3007A25AC /* ImgDetailVC.xib */; };
 		AA86AE9A21FE95BC00414F20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA86AE9921FE95BC00414F20 /* AppDelegate.swift */; };
 		AA86AE9C21FE95BC00414F20 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA86AE9B21FE95BC00414F20 /* MapVC.swift */; };
 		AA86AE9F21FE95BC00414F20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA86AE9D21FE95BC00414F20 /* Main.storyboard */; };
@@ -23,6 +26,9 @@
 /* Begin PBXFileReference section */
 		01BF55B341F0B8E8ACFD6147 /* Pods-pixel-city.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pixel-city.release.xcconfig"; path = "Pods/Target Support Files/Pods-pixel-city/Pods-pixel-city.release.xcconfig"; sourceTree = "<group>"; };
 		3C56E000E9EC99132062C110 /* libPods-pixel-city.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-pixel-city.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA3E3769221FC9A8007A25AC /* FlickrImg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrImg.swift; sourceTree = "<group>"; };
+		AA3E376C222020A3007A25AC /* ImgDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImgDetailVC.swift; sourceTree = "<group>"; };
+		AA3E376D222020A3007A25AC /* ImgDetailVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImgDetailVC.xib; sourceTree = "<group>"; };
 		AA86AE9621FE95BC00414F20 /* pixel-city.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "pixel-city.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA86AE9921FE95BC00414F20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA86AE9B21FE95BC00414F20 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
@@ -58,6 +64,29 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AA3E3768221FC986007A25AC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				AA3E3769221FC9A8007A25AC /* FlickrImg.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		AA3E376B22202082007A25AC /* Xib */ = {
+			isa = PBXGroup;
+			children = (
+				AA3E376D222020A3007A25AC /* ImgDetailVC.xib */,
+			);
+			path = Xib;
+			sourceTree = "<group>";
+		};
+		AA3E377022205BE4007A25AC /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		AA86AE8D21FE95BC00414F20 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +108,9 @@
 		AA86AE9821FE95BC00414F20 /* pixel-city */ = {
 			isa = PBXGroup;
 			children = (
+				AA3E377022205BE4007A25AC /* Services */,
+				AA3E376B22202082007A25AC /* Xib */,
+				AA3E3768221FC986007A25AC /* Model */,
 				AA86AEB121FE98DB00414F20 /* Utilities */,
 				AA86AEB021FE98D300414F20 /* Extensions */,
 				AA86AEAF21FE98C200414F20 /* View */,
@@ -97,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				AA86AE9B21FE95BC00414F20 /* MapVC.swift */,
+				AA3E376C222020A3007A25AC /* ImgDetailVC.swift */,
 				AAD9012321FF056900749D9F /* PopVC.swift */,
 			);
 			path = Controller;
@@ -196,6 +229,7 @@
 			files = (
 				AA86AEA721FE95BE00414F20 /* LaunchScreen.storyboard in Resources */,
 				AA86AEA421FE95BE00414F20 /* Assets.xcassets in Resources */,
+				AA3E376F222020A3007A25AC /* ImgDetailVC.xib in Resources */,
 				AA86AE9F21FE95BC00414F20 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,8 +266,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA3E376E222020A3007A25AC /* ImgDetailVC.swift in Sources */,
 				AA86AE9C21FE95BC00414F20 /* MapVC.swift in Sources */,
 				AAD9012021FEE10400749D9F /* PhotoCell.swift in Sources */,
+				AA3E376A221FC9A8007A25AC /* FlickrImg.swift in Sources */,
 				AAD9012421FF056900749D9F /* PopVC.swift in Sources */,
 				AA86AEB321FEB7C900414F20 /* DroppablePin.swift in Sources */,
 				AA86AE9A21FE95BC00414F20 /* AppDelegate.swift in Sources */,

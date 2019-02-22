@@ -14,12 +14,12 @@ import CoreLocation
 
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
 
-    // outlets
+    // MARK: outlets
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var mapViewBotConstraint: NSLayoutConstraint!
     @IBOutlet weak var pullUpView: UIView!
     
-    // variables
+    // MARK: variables
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 1000
@@ -31,9 +31,12 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     var flowLayout = UICollectionViewFlowLayout()
     var collectionView : UICollectionView?
     
-    //
+    // arrays
     var imageUrlArray = [String]()
     var imageArray = [UIImage]()
+    var flickrImgs = [FlickrImg]()
+    var faveArray = [String]()
+
     
     
     override func viewDidLoad() {
@@ -162,6 +165,7 @@ extension MapVC: MKMapViewDelegate {
         
         imageArray = []
         imageUrlArray = []
+        flickrImgs = []
         collectionView?.reloadData()
         
         //
@@ -206,17 +210,55 @@ extension MapVC: MKMapViewDelegate {
     
     func retrieveUrls(forAnnotation annotation: DroppablePin, handler: @escaping (_ status: Bool) -> ()) {
         imageUrlArray = []
+        flickrImgs = []
         
         Alamofire.request(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, andNumberOfPhotos: 40)).responseJSON { (response) in
-            print(response)
+            
             if response.result.error == nil {
                 guard let json = response.result.value as? Dictionary<String, AnyObject> else {return}
                 let photosDict = json["photos"] as! Dictionary<String, AnyObject>
                 let photoDictArray = photosDict["photo"] as! [Dictionary<String, AnyObject>]
+
                 
                 for photo in photoDictArray {
                     let postUrl = "https://farm\(photo["farm"]!).staticflickr.com/\(photo["server"]!)/\(photo["id"]!)_\(photo["secret"]!)_h_d.jpg"
                     self.imageUrlArray.append(postUrl)
+                    let title = "\(photo["title"]!)"
+                    let id = "\(photo["id"]!)"
+                    let secret = "\(photo["secret"]!)"
+                    
+                    Alamofire.request(flickrGetInfo(key: API_KEY, photoId: id, secret: secret)).responseJSON(completionHandler: { (response) in
+                        
+                        if response.result.error == nil {
+                            guard let json = response.result.value as? Dictionary<String, AnyObject> else {return}
+                            let photoDict = json["photo"] as! Dictionary<String, AnyObject>
+                            let time = photoDict["dates"]!["posted"]! as! String
+                            let unixTime = Double(time)
+                            let date = Date(timeIntervalSince1970: unixTime!)
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.timeZone = TimeZone(abbreviation: "GMT") //Set timezone that you want
+                            dateFormatter.locale = NSLocale.current
+                            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm" //Specify your format that you want
+                            let strDate = dateFormatter.string(from: date)
+                            
+                            let desc = photoDict["description"]!["_content"]! as! String
+                            let userName = photoDict["owner"]!["username"]! as! String
+                            let pos_lat = photoDict["location"]!["latitude"]!! as! String
+                            let pos_lot = photoDict["location"]!["longitude"]!! as! String
+                            Alamofire.request(flickrGetFaves(key: API_KEY, photoId: id)).responseJSON(completionHandler: { (response) in
+                                
+                                if response.result.error == nil {
+                                    guard let json = response.result.value as? Dictionary<String, AnyObject> else {return}
+                                    let photoDict = json["photo"] as! Dictionary<String, AnyObject>
+                                    let faves = photoDict["total"]! as! String
+                                    let flickImg = FlickrImg(title: title, desc: desc, time: strDate, lat: pos_lat, logt:pos_lot, userName: userName, faves:faves)
+                                    print(flickImg)
+                                    self.flickrImgs.append(flickImg)
+                                }
+                            })
+                        }
+                    })
+                 
                 }
                 handler(true)
             }
@@ -285,7 +327,7 @@ extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let popVC = storyboard?.instantiateViewController(withIdentifier: "PopVC") as? PopVC else {return}
-        popVC.initData(forImage: imageArray[indexPath.row])
+        popVC.initData(forImage: imageArray[indexPath.row],title:flickrImgs[indexPath.row].imgTitle, desc: flickrImgs[indexPath.row].imgDescription, time: flickrImgs[indexPath.row].postedTime, lat: flickrImgs[indexPath.row].latitude, logt: flickrImgs[indexPath.row].longtitude)
         present(popVC, animated: true, completion: nil)
     }
     
@@ -295,13 +337,13 @@ extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource {
 extension MapVC: UIViewControllerPreviewingDelegate {
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = collectionView?.indexPathForItem(at: location), let cell = collectionView?.cellForItem(at: indexPath) else {return nil}
-        
-        guard let popVC = storyboard?.instantiateViewController(withIdentifier: "PopVC") as? PopVC else {return nil}
-        popVC.initData(forImage: imageArray[indexPath.row])
+        let imgDetail = ImgDetailVC()
+        imgDetail.configure(name: flickrImgs[indexPath.row].userName, fave: flickrImgs[indexPath.row].faves, img: imageArray[indexPath.row])
+        imgDetail.modalPresentationStyle = .custom
         
         previewingContext.sourceRect = cell.contentView.frame
         
-        return popVC
+        return imgDetail
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
